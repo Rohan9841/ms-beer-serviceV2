@@ -1,11 +1,17 @@
 package com.rohan.brewery.web.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +40,7 @@ public class CustomerController {
 	}
 
 	@PostMapping
-	public ResponseEntity<HttpHeaders> createCustomer(@RequestBody CustomerDto customerDto) {
+	public ResponseEntity<HttpHeaders> createCustomer(@Valid @RequestBody CustomerDto customerDto) {
 		CustomerDto savedCustomer = customerService.saveCustomer(customerDto);
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Location", "api/v1/customer" + savedCustomer.getId().toString());
@@ -43,7 +49,7 @@ public class CustomerController {
 
 	@PutMapping("/{customerId}")
 	public ResponseEntity<Void> updateCustomer(@PathVariable("customerId") UUID customerId,
-			@RequestBody CustomerDto customerDto) {
+			@Valid @RequestBody CustomerDto customerDto) {
 		customerService.updateCustomer(customerId, customerDto);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
